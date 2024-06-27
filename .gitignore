@@ -5,3 +5,4 @@ hello_world.txt
 hello_world2.txt
 Dockerfile
 requirements.txt
+/ui_venv
