@@ -65,6 +65,7 @@ dag = DAG(
     default_args=default_args,
     description='A simple DBT DAG',
    schedule_interval=config['schedule_interval'],
+   catchup=config.get('catchup'),
 )
 
 start = DummyOperator(

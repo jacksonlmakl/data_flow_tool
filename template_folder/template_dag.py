@@ -64,7 +64,7 @@ dag = DAG(
     description='A simple tutorial DAG',
     schedule_interval=config['schedule_interval'],
     start_date=datetime(config['start_date_year'], config['start_month_year'], config['start_day_year']),
-    catchup=False,
+    catchup=config.get('catchup'),
 )
 
 if config.get('use_kafka_sensor') == True:

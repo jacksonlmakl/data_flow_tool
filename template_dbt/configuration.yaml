@@ -5,6 +5,7 @@ start_day_year: 1
 retries: 1
 retry_delay: 5
 schedule_interval: '@daily'
+catchup: False 
 
 use_kafka_sensor: False
 kafka_topic: 'your_kafka_topic'
