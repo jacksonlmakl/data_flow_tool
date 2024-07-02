@@ -1,2 +1,3 @@
 dbt
 dbt-snowflake
+kafka-python
