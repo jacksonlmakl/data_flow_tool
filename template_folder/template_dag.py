@@ -88,7 +88,7 @@ for script in config['python_scripts']:
         python_callable=create_task(dag_folder, script),
         dag=dag,
     )
-    if previous_task and count == 0 and config.get('use_kafka_sensor') == True:
+    if previous_task and count == 1 and config.get('use_kafka_sensor') == True:
         kafka_sensor >> previous_task >> task
     elif previous_task:
         previous_task >> task
