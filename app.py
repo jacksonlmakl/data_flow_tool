@@ -1,15 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_httpauth import HTTPBasicAuth
 import subprocess
 import os
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+auth = HTTPBasicAuth()
+
+# Define your username and password
+USER_DATA = {
+    "admin": "supersecretpassword"
+}
+
+@auth.verify_password
+def verify(username, password):
+    if username in USER_DATA and USER_DATA[username] == password:
+        return username
 
 @app.route('/')
+@auth.login_required
 def index():
     return render_template('index.html')
 
 @app.route('/run_script', methods=['POST'])
+@auth.login_required
 def run_script():
     script = request.form['script']
     dag_name = request.form.get('dag_name', '')
@@ -49,6 +63,7 @@ def run_script():
     return redirect(url_for('index'))
 
 @app.route('/docker_ps')
+@auth.login_required
 def docker_ps():
     try:
         result = subprocess.run(['sudo', 'docker', 'ps', '-a'], capture_output=True, text=True)
@@ -61,6 +76,7 @@ def docker_ps():
     return render_template('output.html', output=output)
 
 @app.route('/docker_images')
+@auth.login_required
 def docker_images():
     try:
         result = subprocess.run(['sudo', 'docker', 'images'], capture_output=True, text=True)
@@ -73,6 +89,7 @@ def docker_images():
     return render_template('output.html', output=output)
 
 @app.route('/docker_logs', methods=['POST'])
+@auth.login_required
 def docker_logs():
     container_id = request.form['container_id']
     try:
@@ -86,6 +103,7 @@ def docker_logs():
     return render_template('output.html', output=output)
 
 @app.route('/docker_login', methods=['POST'])
+@auth.login_required
 def docker_login():
     username = request.form['username']
     password = request.form['password']
@@ -100,6 +118,7 @@ def docker_login():
     return render_template('output.html', output=output)
 
 @app.route('/docker_push', methods=['POST'])
+@auth.login_required
 def docker_push():
     image_name = request.form['image_name']
     try:
@@ -113,6 +132,7 @@ def docker_push():
     return render_template('output.html', output=output)
 
 @app.route('/github_push', methods=['POST'])
+@auth.login_required
 def github_push():
     repo_url = request.form['repo_url']
     branch_name = request.form['branch_name']
@@ -148,6 +168,7 @@ def github_push():
     return redirect(url_for('index'))
 
 @app.route('/github_pull', methods=['POST'])
+@auth.login_required
 def github_pull():
     branch_name = request.form['branch_name']
     try:
@@ -167,6 +188,7 @@ def github_pull():
     return redirect(url_for('index'))
 
 @app.route('/create_ssh_key', methods=['POST'])
+@auth.login_required
 def create_ssh_key():
     ssh_key_email = request.form['ssh_key_email']
     ssh_key_path = os.path.expanduser('~/.ssh/id_rsa')
@@ -196,6 +218,7 @@ def create_ssh_key():
     return redirect(url_for('index'))
 
 @app.route('/view_ssh_key', methods=['GET'])
+@auth.login_required
 def view_ssh_key():
     try:
         with open(os.path.expanduser('~/.ssh/id_rsa.pub'), 'r') as file:

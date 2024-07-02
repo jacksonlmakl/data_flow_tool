@@ -22,7 +22,7 @@ echo "Upgrading pip..."
 pip install --upgrade pip
 
 pip install flask
-
+pip install flask-httpauth
 # Run the Flask app in the background
 echo "Running Flask app in the background..."
 nohup python $APP_FILE > flask_app.log 2>&1 &
