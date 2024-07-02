@@ -211,23 +211,26 @@ def create_ssh_key():
         if result.stderr:
             flash(result.stderr)
         else:
-            flash('SSH key created successfully.')
+            # flash('SSH key created successfully.')
+            with open(os.path.expanduser('~/.ssh/id_rsa.pub'), 'r') as file:
+                ssh_key = file.read()
+            flash(ssh_key)
     except Exception as e:
         flash(f"Error creating SSH key: {str(e)}")
 
     return redirect(url_for('index'))
 
-@app.route('/view_ssh_key', methods=['GET'])
-@auth.login_required
-def view_ssh_key():
-    try:
-        with open(os.path.expanduser('~/.ssh/id_rsa.pub'), 'r') as file:
-            ssh_key = file.read()
-        flash(ssh_key)
-    except Exception as e:
-        flash(str(e))
+# @app.route('/view_ssh_key', methods=['GET'])
+# @auth.login_required
+# def view_ssh_key():
+#     try:
+#         with open(os.path.expanduser('~/.ssh/id_rsa.pub'), 'r') as file:
+#             ssh_key = file.read()
+#         flash(ssh_key)
+#     except Exception as e:
+#         flash(str(e))
     
-    return redirect(url_for('index'))
+#     return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True)
