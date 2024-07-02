@@ -5,3 +5,11 @@ start_day_year: 1
 retries: 1
 retry_delay: 5
 schedule_interval: '@daily'
+
+use_kafka_sensor: False
+kafka_topic: 'your_kafka_topic'
+kafka_bootstrap_servers: ['localhost:9092']
+kafka_group_id: 'your_group_id'
+kafka_poke_interval: 30
+kafka_timeout: 600
+

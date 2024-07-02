@@ -10,3 +10,10 @@ python_scripts:
   - "script1.py"
   - "script2.py"
 requirements_file: "requirements.txt"
+
+use_kafka_sensor: False
+kafka_topic: 'your_kafka_topic'
+kafka_bootstrap_servers: ['localhost:9092']
+kafka_group_id: 'your_group_id'
+kafka_poke_interval: 30
+kafka_timeout: 600

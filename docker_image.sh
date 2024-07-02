@@ -115,6 +115,7 @@ RUN python3 -m venv /opt/airflow/airflow_venv
 # Upgrade pip and install dependencies
 RUN /opt/airflow/airflow_venv/bin/pip install --upgrade pip
 RUN /opt/airflow/airflow_venv/bin/pip install dbt dbt-snowflake
+RUN /opt/airflow/airflow_venv/bin/pip install kafka-python
 RUN /opt/airflow/airflow_venv/bin/pip install -r /opt/airflow/requirements.txt
 
 # Set the working directory

@@ -5,7 +5,33 @@ from datetime import datetime, timedelta
 import os
 import subprocess
 import yaml
+from airflow.sensors.base_sensor_operator import BaseSensorOperator
+from airflow.utils.decorators import apply_defaults
+from kafka import KafkaConsumer
+class KafkaTopicSensor(BaseSensorOperator):
+    @apply_defaults
+    def __init__(self, topic, bootstrap_servers, group_id, *args, **kwargs):
+        super(KafkaTopicSensor, self).__init__(*args, **kwargs)
+        self.topic = topic
+        self.bootstrap_servers = bootstrap_servers
+        self.group_id = group_id
 
+    def poke(self, context):
+        consumer = KafkaConsumer(
+            self.topic,
+            bootstrap_servers=self.bootstrap_servers,
+            group_id=self.group_id,
+            auto_offset_reset='earliest',
+            enable_auto_commit=True
+        )
+        
+        for message in consumer:
+            self.log.info(f"Received message: {message.value}")
+            consumer.commit()
+            return True
+
+        return False
+    
 def load_config(dag_folder):
     config_file = os.path.join(dag_folder, f'<PLACEHOLDER_NAME_HERE>_configuration.yaml')
     with open(config_file, 'r') as file:
@@ -51,8 +77,19 @@ run_dbt = PythonOperator(
     python_callable=run_dbt_project,
     dag=dag,
 )
-
-start >> run_dbt
+if config.get('use_kafka_sensor') == True:
+    kafka_sensor = KafkaTopicSensor(
+        task_id='kafka_sensor_task',
+        topic=config.get('kafka_topic'),
+        bootstrap_servers=config.get('kafka_bootstrap_servers'),
+        group_id=config.get('kafka_group_id'),
+        poke_interval=int(config.get('kafka_poke_interval')),  # Check every 30 seconds
+        timeout=int(config.get('kafka_timeout')),  # Timeout after 10 minutes
+        dag=dag
+    )
+    start >> kafka_sensor >> run_dbt
+else:   
+    start >> run_dbt
 
 
 
