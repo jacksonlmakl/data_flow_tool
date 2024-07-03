@@ -43,6 +43,7 @@ cp "$CURRENT_DIR/template_dbt/models" "$DBT_PROJECT_DIR/models"
 cp "$CURRENT_DIR/template_dbt/models/marts/core_pokemon.sql" "$DBT_PROJECT_DIR/models/marts/core_pokemon.sql"
 cp "$CURRENT_DIR/template_dbt/models/staging/stg_pokemon.sql" "$DBT_PROJECT_DIR/models/staging/stg_pokemon.sql"
 cp "$CURRENT_DIR/template_dbt/models/sources/pokemon.yml" "$DBT_PROJECT_DIR/models/sources/pokemon.yml"
+cp "$CURRENT_DIR/template_dbt/.dbtignore" "$DBT_PROJECT_DIR/.dbtignore"
 
 cp "$CURRENT_DIR/template_dbt/seeds/my_seed_data.csv" "$DBT_PROJECT_DIR/seeds/my_seed_data.csv"
 # cp "$CURRENT_DIR/template_dbt/snapshots/snapshot_orders.sql" "$DBT_PROJECT_DIR/snapshots/snapshot_orders.sql"
